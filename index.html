@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Reverse</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+font-family:'Inter',sans-serif;
+color:white;
+overflow-x:hidden;
+cursor:none;
+background:#0b0c14;
+}
+
+.bgimg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:url("https://wallpapers.com/images/hd/abstract-blue-polygon-triangles-k61lmudr1xhw9ybc.webp") center/cover no-repeat;
+filter:blur(20px) brightness(.4);
+z-index:-4;
+}
+
+#bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-3
+}
+
+.cursor{
+position:fixed;
+width:34px;
+height:34px;
+background:url("https://i.imgur.com/F62UN4o.png") center/contain no-repeat;
+pointer-events:none;
+z-index:9999;
+transform:translate(-50%,-50%)
+}
+
+.mouseGlow{
+position:fixed;
+width:320px;
+height:320px;
+border-radius:50%;
+background:radial-gradient(circle,rgba(95,108,255,.25),transparent 70%);
+filter:blur(40px);
+pointer-events:none;
+transform:translate(-50%,-50%);
+z-index:-1
+}
+
+header{
+position:sticky;
+top:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:22px 60px;
+background:rgba(10,10,18,.65);
+backdrop-filter:blur(12px);
+border-bottom:1px solid rgba(255,255,255,.05)
+}
+
+.logoWrap{
+display:flex;
+align-items:center;
+gap:12px
+}
+
+.logoImg{
+width:42px;
+height:42px;
+border-radius:10px;
+animation:logoGlow 4s ease-in-out infinite alternate
+}
+
+.logoText{
+font-weight:800;
+letter-spacing:3px;
+font-size:18px
+}
+
+@keyframes logoGlow{
+0%{box-shadow:0 0 10px rgba(95,108,255,.3)}
+100%{box-shadow:0 0 40px rgba(124,77,255,.9)}
+}
+
+nav a{
+color:#aaa;
+text-decoration:none;
+margin-left:28px;
+font-size:14px;
+cursor:pointer;
+transition:.25s
+}
+
+nav a:hover{
+color:white;
+text-shadow:0 0 10px #5f6cff
+}
+
+.page{
+display:none;
+max-width:1100px;
+margin:auto;
+padding:120px 40px
+}
+
+.page.active{
+display:block;
+animation:fade .4s ease
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(15px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+h1{
+font-size:48px;
+margin-bottom:20px;
+background:linear-gradient(90deg,#5f6cff,#7c4dff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent
+}
+
+h2{
+font-size:30px;
+margin-bottom:40px
+}
+
+p{
+color:#bdbdd3;
+line-height:1.7
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px
+}
+
+.card{
+position:relative;
+padding:35px;
+border-radius:22px;
+background:rgba(20,20,35,.7);
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,.05);
+overflow:hidden;
+transition:.25s
+}
+
+.card::before{
+content:"";
+position:absolute;
+inset:-2px;
+border-radius:24px;
+background:linear-gradient(120deg,#5f6cff,#7c4dff,#5f6cff);
+background-size:200% 200%;
+opacity:0;
+z-index:-1;
+transition:.35s
+}
+
+.card:hover::before{
+opacity:1;
+animation:borderMove 3s linear infinite
+}
+
+@keyframes borderMove{
+0%{background-position:0%}
+100%{background-position:200%}
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 0 35px rgba(95,108,255,.35)
+}
+
+.button{
+display:inline-block;
+padding:15px 36px;
+border-radius:999px;
+background:linear-gradient(135deg,#5f6cff,#7c4dff);
+color:white;
+text-decoration:none;
+font-weight:600;
+font-size:14px;
+margin-top:20px;
+transition:.25s;
+box-shadow:0 0 25px rgba(95,108,255,.35)
+}
+
+.button:hover{
+transform:translateY(-4px);
+box-shadow:0 0 45px rgba(124,77,255,.8)
+}
+
+.release{
+margin-top:10px;
+font-size:13px;
+color:#9aa0ff
+}
+
+footer{
+text-align:center;
+padding:50px;
+color:#666;
+font-size:13px;
+border-top:1px solid rgba(255,255,255,.05)
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bgimg"></div>
+<canvas id="bg"></canvas>
+
+<div class="cursor" id="cursor"></div>
+<div class="mouseGlow" id="mouseGlow"></div>
+
+<header>
+
+<div class="logoWrap">
+<img src="https://i.imgur.com/NFgZ3gb.png" class="logoImg">
+<div class="logoText">REVERSE</div>
+</div>
+
+<nav>
+<a data-tab="home">Home</a>
+<a data-tab="downloads">Downloads</a>
+<a data-tab="community">Community</a>
+<a data-tab="github">GitHub</a>
+</nav>
+
+</header>
+
+<div id="home" class="page active">
+
+<h1>Project Reverse</h1>
+
+<p>
+Project Revsere is a community Fortnite build project made for fun matches and chill sessions, all custom, all free to play sessions.
+</p>
+
+<h2 style="margin-top:70px">Launcher Updates</h2>
+
+<div class="grid"></div>
+
+
+
+<p>Launcher Updates will get posted here!</p>
+
+<div class="card">
+<p>Home page is here</p>
+<img src="https://i.imgur.com/UcXoErC.png" width="333" height="215" class="img"></a>
+</div>
+
+
+
+<h2 style="margin-top:70px">Latest News</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Launcher Update</h3>
+<p>Launcher improved with some launch code and news and other stuff.</p>
+</div>
+
+<div class="card">
+<h3>Backend Updates</h3>
+<p>Added some new commands like givepacks for admins only!</p>
+</div>
+
+<div class="card">
+<h3>Lategame Testing</h3>
+<p>Possible lategame support (gameserver) being tested.</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="downloads" class="page">
+
+<h2>Downloads</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Game Build</h3>
+<p>Version v13.40</p>
+<a href="https://forcedfnbuilds.website/13.40.rar" class="button">Download Build</a>
+</div>
+
+<div class="card">
+<h3>Launcher</h3>
+<p>Version 1.1.0</p>
+<div class="release" id="releaseTimer"></div>
+<a class="button" style="opacity:.6">Coming Soon</a>
+</div>
+
+</div>
+
+</div>
+
+<div id="community" class="page">
+
+<h2>Community</h2>
+
+<div class="card">
+<p>Join the Reverse Discord server.</p>
+<a href="https://discord.gg/M4Q6depD4v" class="button">Join Discord</a>
+</div>
+
+
+<div class="card">
+<p>Follow the Tiktok.</p>
+<a href="https://tiktok.com/@projectreversefnn" class="button">Follow Tiktok</a>
+</div>
+
+</div>
+<p>made with html. </p> 
+<img src="https://static.vecteezy.com/system/resources/thumbnails/053/066/798/small_2x/free-logo-html-5-free-png.png" width="30" height="29">
+
+<div id="github" class="page">
+
+<h2>GitHub</h2>
+
+<div class="card">
+<p>View sh4rk's github repository!</p>
+<a href="https://github.com/uwuxxx" class="button">Open GitHub</a>
+</div>
+
+</div>
+
+<footer>
+made by sh4rk
+</footer>
+
+<script>
+
+document.querySelectorAll("nav a").forEach(link=>{
+link.onclick=()=>{
+let tab=link.dataset.tab
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
+document.getElementById(tab).classList.add("active")
+window.scrollTo(0,0)
+}
+})
+
+const cursor=document.getElementById("cursor")
+const glow=document.getElementById("mouseGlow")
+
+window.addEventListener("mousemove",e=>{
+cursor.style.left=e.clientX+"px"
+cursor.style.top=e.clientY+"px"
+glow.style.left=e.clientX+"px"
+glow.style.top=e.clientY+"px"
+})
+
+const releaseDate=new Date()
+releaseDate.setMonth(releaseDate.getMonth()+1)
+
+function timer(){
+let now=new Date()
+let diff=releaseDate-now
+let d=Math.floor(diff/(1000*60*60*24))
+let h=Math.floor(diff/(1000*60*60)%24)
+let m=Math.floor(diff/(1000*60)%60)
+document.getElementById("releaseTimer").innerText="Launcher releases in "+d+"d "+h+"h "+m+"m"
+}
+
+setInterval(timer,1000)
+timer()
+
+const canvas=document.getElementById("bg")
+const ctx=canvas.getContext("2d")
+
+canvas.width=innerWidth
+canvas.height=innerHeight
+
+let particles=[]
+
+for(let i=0;i<90;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+dx:(Math.random()-0.5)*0.6,
+dy:(Math.random()-0.5)*0.6,
+r:2
+})
+}
+
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+particles.forEach(p=>{
+p.x+=p.dx
+p.y+=p.dy
+
+if(p.x<0||p.x>canvas.width)p.dx*=-1
+if(p.y<0||p.y>canvas.height)p.dy*=-1
+
+ctx.beginPath()
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2)
+ctx.fillStyle="rgba(95,108,255,.7)"
+ctx.fill()
+})
+
+requestAnimationFrame(draw)
+}
+
+draw()
+
+</script>
+
+</body>
+</html>
